@@ -27,3 +27,4 @@ buildNumber.properties
 *.iml
 *.log
 .DS_Store
+application.properties
