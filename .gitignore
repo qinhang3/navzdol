@@ -25,3 +25,5 @@ buildNumber.properties
 # Created by .ignore support plugin (hsz.mobi)
 .idea
 *.iml
+*.log
+.DS_Store
