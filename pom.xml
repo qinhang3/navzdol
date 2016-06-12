@@ -8,7 +8,6 @@
     <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>navzdol-core</module>
-        <module>navzdol-data</module>
         <module>navzdol-web</module>
     </modules>
     <packaging>pom</packaging>
