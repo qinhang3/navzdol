@@ -1,11 +1,8 @@
 package com.github.navzdol.algorithm;
 
-import com.github.navzdol.CompanyOperatorService;
 import com.github.navzdol.dataobject.Company;
 import com.github.navzdol.dataobject.Record;
-import com.github.navzdol.repository.CompanyRepo;
-import com.github.navzdol.repository.RecordRepo;
-import com.github.navzdol.util.GsonUtil;
+import com.github.navzdol.service.CompanyOperatorService;
 import com.github.navzdol.util.HtmlUtil;
 import com.github.navzdol.util.HttpUtil;
 import org.apache.http.HttpResponse;
@@ -41,7 +38,7 @@ public class DataService {
      * @param date
      */
 
-    private final String[] dataTypes = new String[]{"ALL", "SH", "SZ", "ZXB", "CYB"};
+    private final String[] dataTypes = new String[]{/*"ALL",*/ "SH", "SZ", "ZXB", "CYB"};
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -59,12 +56,23 @@ public class DataService {
             }
 
             Elements elements = document.select("#maintable tbody tr");
+            if (noData(elements)){
+                continue;
+            }
             for (Element element : elements) {
                 Record record = buildRecord(element, date, dataType);
                 Map<String, List<Company>> companies = getCompanies(record);
                 companyOperatorService.save(record,companies);
             }
         }
+    }
+
+    private boolean noData(Elements elements) {
+        if (elements == null && elements.size() == 0){
+            return true;
+        }
+        Element element = elements.get(0);
+        return element.select("td").attr("colspan").equals("12");
     }
 
     /**
@@ -89,7 +97,7 @@ public class DataService {
         Map<String,List<Company>> companies = new HashMap<>();
 
         for (Element element : elements) {
-            if (element.attr("class").contains("lhb_td_desc")){
+            if (element.attr("class").contains("lhb_td_desc") || element.attr("class").contains("lhb_td_mmjc")){
                 typeIndex++;
                 if (typeIndex >= companyOperatorTypes.length){
                     break;

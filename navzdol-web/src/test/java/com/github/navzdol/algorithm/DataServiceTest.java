@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * Created by hang on 16/6/11.
@@ -24,9 +25,16 @@ public class DataServiceTest {
 
     @Test
     public void test() throws ParseException {
-        String date = "2016-06-07";
+        String dateStart = "2016-04-01";
+        String dateEnd = "2016-06-08";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        dataService.getData(sdf.parse(date));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(sdf.parse(dateStart));
+
+        while(calendar.getTime().before(sdf.parse(dateEnd))){
+            dataService.getData(calendar.getTime());
+            calendar.set(Calendar.DAY_OF_MONTH,calendar.get(Calendar.DAY_OF_MONTH) + 1);
+        }
     }
 }
