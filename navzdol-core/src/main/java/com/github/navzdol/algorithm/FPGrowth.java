@@ -19,10 +19,16 @@ public class FPGrowth {
         this.minSup = minSup;
     }
 
+    public List<FPResult> getResult() {
+        return result;
+    }
+
+    private List<FPResult> result = new ArrayList<>();
+
     private List<FPResult> work(FPResult data) {
 
         if (data.getExtData().isEmpty()){
-            System.out.println(String.format("found {%s} , cnt = %d",data.getData(),data.getCnt()));
+            result.add(data);
             return new ArrayList<>();
         }
 
@@ -97,29 +103,35 @@ public class FPGrowth {
         return fpResults;
     }
 
-    public static void main(String[] args){
+    public void run(List<String> datas){
         List<FPData> fpDatas = new ArrayList<>();
-        InputStream is = FPGrowth.class.getResourceAsStream("/input.txt");
-        Scanner scanner = new Scanner(is);
-        while(scanner.hasNext()){
-            String s = scanner.nextLine();
+        for (String data : datas) {
             List<String> ss = new ArrayList<>();
-            for (String s1 : s.split(",")) {
+            for (String s1 : data.split(",")) {
                 ss.add(s1);
             }
             fpDatas.add(new FPData(ss,1));
         }
-
-        FPResult fpResult = new FPResult(new ArrayList<>(),fpDatas,0);
-        FPGrowth fpGrowth = new FPGrowth(5);
-
         Queue<FPResult> queue = new LinkedBlockingDeque<>();
-        queue.add(fpResult);
-
+        queue.add(new FPResult(new ArrayList<>(),fpDatas,1));
         while(!queue.isEmpty()){
-            List<FPResult> fpResults = fpGrowth.work(queue.poll());
+            List<FPResult> fpResults = work(queue.poll());
             queue.addAll(fpResults);
-            System.out.println("size = " + queue.size());
         }
+    }
+
+    public static void main(String[] args){
+        InputStream is = FPGrowth.class.getResourceAsStream("/input.txt");
+        Scanner scanner = new Scanner(is);
+        List<String> datas = new ArrayList<>();
+
+        while(scanner.hasNext()){
+            String s = scanner.nextLine();
+            datas.add(s);
+        }
+
+        FPGrowth fpGrowth = new FPGrowth(5);
+        fpGrowth.run(datas);
+        System.out.println(fpGrowth.getResult());
     }
 }

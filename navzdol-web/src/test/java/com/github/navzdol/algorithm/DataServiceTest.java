@@ -25,7 +25,7 @@ public class DataServiceTest {
 
     @Test
     public void test() throws ParseException {
-        String dateStart = "2016-04-01";
+        String dateStart = "2016-06-02";
         String dateEnd = "2016-06-08";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
